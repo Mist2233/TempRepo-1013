@@ -1,0 +1,59 @@
+- type: Backend
+  id: API-POST-GetVerificationCode
+  route: POST /api/auth/verification-code
+  description: 处理获取验证码请求，验证手机号格式并生成6位验证码。
+  input:
+    type: JSON
+    body:
+      phoneNumber: string
+  output:
+    success:
+      statusCode: 200
+      body: { message: "验证码已发送", countdown: 60 }
+    error:
+      - statusCode: 400
+        body: { error: "请输入正确的手机号码" }
+      - statusCode: 429
+        body: { error: "请求过于频繁，请稍后再试" }
+  dependencies:
+    - DB-StoreVerificationCode
+  acceptanceCriteria:
+    - 手机号格式正确时，生成6位数字验证码并打印到控制台。
+    - 验证码存储到数据库，有效期60秒。
+    - 返回成功响应，包含60秒倒计时信息。
+    - 手机号格式错误时，返回400错误。
+  changeLog:
+    - date: "2025-01-13"
+      description: "初始创建。"
+
+- type: Backend
+  id: API-POST-Login
+  route: POST /api/auth/login
+  description: 处理用户登录请求，验证手机号注册状态和验证码正确性。
+  input:
+    type: JSON
+    body:
+      phoneNumber: string
+      verificationCode: string
+  output:
+    success:
+      statusCode: 200
+      body: { message: "登录成功", userId: "uuid", token: "jwt" }
+    error:
+      - statusCode: 400
+        body: { error: "验证码错误" }
+      - statusCode: 404
+        body: { error: "该手机号未注册，请先完成注册" }
+      - statusCode: 410
+        body: { error: "验证码已过期" }
+  dependencies:
+    - DB-FindUserByPhone
+    - DB-VerifyCode
+  acceptanceCriteria:
+    - 手机号未注册时，返回404错误提示用户注册。
+    - 验证码错误时，返回400错误。
+    - 验证码过期时，返回410错误。
+    - 验证成功时，返回200状态码和用户信息。
+  changeLog:
+    - date: "2025-01-13"
+      description: "初始创建。"

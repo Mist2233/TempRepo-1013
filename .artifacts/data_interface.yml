@@ -1,0 +1,38 @@
+- type: Database
+  id: DB-FindUserByPhone
+  description: 根据手机号查找用户记录，用于验证用户是否已注册。
+  dependencies:
+    - none
+  acceptanceCriteria:
+    - 成功查找到用户时，返回用户记录信息。
+    - 未找到用户时，返回空结果。
+    - 手机号格式验证应在调用前完成。
+  changeLog:
+    - date: "2025-01-13"
+      description: "初始创建。"
+
+- type: Database
+  id: DB-StoreVerificationCode
+  description: 在数据库中存储手机号对应的验证码，设置60秒有效期。
+  dependencies:
+    - none
+  acceptanceCriteria:
+    - 成功存储验证码和手机号的关联关系。
+    - 验证码有效期为60秒。
+    - 如果同一手机号已有验证码，应覆盖旧的验证码。
+  changeLog:
+    - date: "2025-01-13"
+      description: "初始创建。"
+
+- type: Database
+  id: DB-VerifyCode
+  description: 验证手机号对应的验证码是否正确且未过期。
+  dependencies:
+    - none
+  acceptanceCriteria:
+    - 验证码正确且未过期时，返回验证成功。
+    - 验证码错误或已过期时，返回验证失败。
+    - 验证成功后，应清除该验证码记录。
+  changeLog:
+    - date: "2025-01-13"
+      description: "初始创建。"
