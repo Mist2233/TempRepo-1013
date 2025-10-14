@@ -1,10 +1,10 @@
 - type: Frontend
   id: UI-LoginForm
-  description: 完整的用户登录表单组件，包含手机号输入、验证码获取和登录功能。
+  description: 用户登录表单组件，处理用户登录流程。
   properties:
     - name: onLoginSuccess
       type: function
-      description: "登录成功后的回调函数，用于页面跳转。"
+      description: "登录成功后的回调函数，接收用户信息和token。"
     - name: onNavigateToRegister
       type: function
       description: "导航到注册页面的回调函数。"
@@ -14,37 +14,106 @@
     - error
     - isLoading
     - countdown
-    - isCodeSent
   dependencies:
-    - API-POST-GetVerificationCode
+    - API-POST-SendVerificationCode
     - API-POST-Login
   acceptanceCriteria:
     - 组件应渲染手机号输入框、验证码输入框、获取验证码按钮和登录按钮。
-    - 手机号格式验证应在前端进行，格式错误时显示提示信息。
-    - 获取验证码按钮点击后进入60秒倒计时状态且不可点击。
-    - 登录过程中，登录按钮应显示加载状态且不可点击。
-    - 显示相应的错误提示信息（验证码错误、未注册等）。
-    - 登录成功后调用onLoginSuccess回调并显示成功提示。
-    - 未注册用户应提供注册引导。
+    - 验证手机号格式，格式错误时显示"请输入正确的手机号码"。
+    - 获取验证码后，按钮进入60秒倒计时且不可点击。
+    - 登录时显示加载状态，按钮变为不可点击。
+    - 根据API响应显示相应的错误或成功消息。
+    - 登录成功后调用onLoginSuccess回调并跳转到首页。
   changeLog:
-    - date: "2025-01-13"
+    - date: "2025-10-13"
       description: "初始创建。"
 
 - type: Frontend
-  id: UI-LoginButton
-  description: 首页的登录入口按钮组件，显示"亲，请登录"文本。
+  id: UI-RegisterForm
+  description: 用户注册表单组件，处理用户注册流程。
   properties:
+    - name: onRegisterSuccess
+      type: function
+      description: "注册成功后的回调函数，接收用户信息和token。"
     - name: onNavigateToLogin
       type: function
-      description: "点击后导航到登录页面的回调函数。"
+      description: "导航到登录页面的回调函数。"
+  state:
+    - phoneNumber
+    - verificationCode
+    - agreeToTerms
+    - error
+    - isLoading
+    - countdown
+  dependencies:
+    - API-POST-SendVerificationCode
+    - API-POST-Register
+  acceptanceCriteria:
+    - 组件应渲染手机号输入框、验证码输入框、获取验证码按钮、用户协议勾选框和注册按钮。
+    - 验证手机号格式，格式错误时显示"请输入正确的手机号码"。
+    - 获取验证码后，按钮进入60秒倒计时且不可点击。
+    - 未勾选用户协议时，注册按钮应为不可点击状态。
+    - 勾选用户协议后，注册按钮变为可点击状态。
+    - 注册时显示加载状态，按钮变为不可点击。
+    - 根据API响应显示相应的错误或成功消息。
+    - 注册成功后调用onRegisterSuccess回调并跳转到首页。
+    - 如果手机号已注册，显示"该手机号已注册，将直接为您登录"并自动登录。
+  changeLog:
+    - date: "2025-10-13"
+      description: "初始创建。"
+
+- type: Frontend
+  id: UI-VerificationCodeInput
+  description: 验证码输入组件，可在登录和注册表单中复用。
+  properties:
+    - name: phoneNumber
+      type: string
+      description: "手机号，用于发送验证码。"
+    - name: onCodeSent
+      type: function
+      description: "验证码发送成功后的回调函数。"
+    - name: onError
+      type: function
+      description: "发送验证码失败时的回调函数。"
+    - name: type
+      type: string
+      description: "验证码类型，'login' 或 'register'。"
+  state:
+    - verificationCode
+    - countdown
+    - isLoading
+  dependencies:
+    - API-POST-SendVerificationCode
+  acceptanceCriteria:
+    - 组件应渲染验证码输入框和获取验证码按钮。
+    - 验证手机号格式，格式错误时不允许发送验证码。
+    - 发送验证码后，按钮进入60秒倒计时且不可点击。
+    - 倒计时结束后，按钮恢复可点击状态。
+    - 发送验证码时显示加载状态。
+    - 根据API响应调用相应的回调函数。
+  changeLog:
+    - date: "2025-10-13"
+      description: "初始创建。"
+
+- type: Frontend
+  id: UI-HomePage
+  description: 首页组件，包含登录和注册入口。
+  properties:
+    - name: isLoggedIn
+      type: boolean
+      description: "用户是否已登录。"
+    - name: userInfo
+      type: object
+      description: "用户信息对象。"
   state:
     - none
   dependencies:
     - none
   acceptanceCriteria:
-    - 按钮应显示"亲，请登录"文本。
-    - 点击按钮后调用onNavigateToLogin回调函数。
-    - 按钮样式应符合整体设计风格。
+    - 未登录时显示"亲，请登录"和"免费注册"按钮。
+    - 已登录时显示用户信息和相关功能。
+    - 点击"亲，请登录"按钮导航到登录页面。
+    - 点击"免费注册"按钮导航到注册页面。
   changeLog:
-    - date: "2025-01-13"
+    - date: "2025-10-13"
       description: "初始创建。"
