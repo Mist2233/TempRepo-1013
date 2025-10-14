@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import LoginForm from './components/LoginForm';
 import LoginButton from './components/LoginButton';
+import ThemeToggle from './components/ThemeToggle';
 import './styles/App.css';
 
 function App() {
@@ -25,9 +26,12 @@ function App() {
       <header className="header">
         <div className="header-content">
           <a href="#" className="logo">淘宝</a>
-          {!showLogin && (
-            <LoginButton onNavigateToLogin={handleNavigateToLogin} />
-          )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <ThemeToggle />
+            {!showLogin && (
+              <LoginButton onNavigateToLogin={handleNavigateToLogin} />
+            )}
+          </div>
         </div>
       </header>
 
@@ -58,8 +62,8 @@ function App() {
           </div>
         ) : (
           <div style={{ textAlign: 'center', padding: '100px 20px' }}>
-            <h1 style={{ fontSize: '48px', color: '#ff6600', marginBottom: '20px' }}>欢迎来到淘宝</h1>
-            <p style={{ fontSize: '18px', color: '#666', marginBottom: '40px' }}>发现好物，享受购物乐趣</p>
+            <h1 style={{ fontSize: '48px', color: 'var(--accent)', marginBottom: '20px' }}>欢迎来到淘宝</h1>
+            <p style={{ fontSize: '18px', color: 'var(--muted-text)', marginBottom: '40px' }}>发现好物，享受购物乐趣</p>
             <LoginButton onNavigateToLogin={handleNavigateToLogin} />
           </div>
         )}
