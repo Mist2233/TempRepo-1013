@@ -1,24 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import './LoginForm.css';
+import './RegisterForm.css';
 
-interface LoginFormProps {
-  onLoginSuccess: (userInfo: any, token: string) => void;
-  onNavigateToRegister: () => void;
+interface RegisterFormProps {
+  onRegisterSuccess: (userInfo: any, token: string) => void;
+  onNavigateToLogin: () => void;
 }
 
-interface LoginFormState {
+interface RegisterFormState {
   phoneNumber: string;
   verificationCode: string;
+  agreeToTerms: boolean;
   error: string;
   isLoading: boolean;
   countdown: number;
 }
 
-// 接口ID: UI-LoginForm
-const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess, onNavigateToRegister }) => {
-  const [state, setState] = useState<LoginFormState>({
+// 接口ID: UI-RegisterForm
+const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess, onNavigateToLogin }) => {
+  const [state, setState] = useState<RegisterFormState>({
     phoneNumber: '',
     verificationCode: '',
+    agreeToTerms: false,
     error: '',
     isLoading: false,
     countdown: 0
@@ -59,10 +61,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess, onNavigateToRegis
         body: JSON.stringify({ phoneNumber: state.phoneNumber }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
         setState(prev => ({ ...prev, countdown: 60, error: '' }));
       } else {
-        const data = await response.json();
         setState(prev => ({ ...prev, error: data.error || '发送验证码失败' }));
       }
     } catch (error) {
@@ -72,7 +75,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess, onNavigateToRegis
     }
   };
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
     // 验证输入
     if (!validatePhoneNumber(state.phoneNumber)) {
       setState(prev => ({ ...prev, error: '请输入正确的手机号码' }));
@@ -84,10 +87,15 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess, onNavigateToRegis
       return;
     }
 
+    if (!state.agreeToTerms) {
+      setState(prev => ({ ...prev, error: '请同意用户协议' }));
+      return;
+    }
+
     setState(prev => ({ ...prev, error: '', isLoading: true }));
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -95,15 +103,16 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess, onNavigateToRegis
         body: JSON.stringify({
           phoneNumber: state.phoneNumber,
           verificationCode: state.verificationCode,
+          agreeToTerms: state.agreeToTerms,
         }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        const data = await response.json();
-        onLoginSuccess(data.userInfo, data.token);
+        onRegisterSuccess(data.userInfo, data.token);
       } else {
-        const data = await response.json();
-        setState(prev => ({ ...prev, error: data.error || '登录失败' }));
+        setState(prev => ({ ...prev, error: data.error || '注册失败' }));
       }
     } catch (error) {
       setState(prev => ({ ...prev, error: '网络错误，请重试' }));
@@ -113,11 +122,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess, onNavigateToRegis
   };
 
   return (
-    <div className="login-form-container">
-      <div className="login-form">
+    <div className="register-form-container">
+      <div className="register-form">
         <div className="form-header">
-          <h2 className="form-title">密码登录</h2>
-          <span className="form-subtitle active">短信登录</span>
+          <h2 className="form-title">免费注册</h2>
         </div>
         
         <div className="form-content">
@@ -150,26 +158,28 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess, onNavigateToRegis
 
           {state.error && <div className="error-message">{state.error}</div>}
 
-          <div className="form-options">
-            <label className="checkbox-label">
-              <input type="checkbox" />
-              <span className="checkbox-text">自动登录</span>
+          <div className="terms-group">
+            <label className="terms-label">
+              <input
+                type="checkbox"
+                checked={state.agreeToTerms}
+                onChange={(e) => setState(prev => ({ ...prev, agreeToTerms: e.target.checked, error: '' }))}
+              />
+              <span className="terms-text">我已阅读并同意用户协议</span>
             </label>
-            <a href="#" className="forgot-password">忘记登录密码？</a>
           </div>
 
           <button 
-            className={`login-btn ${state.isLoading ? 'loading' : ''}`}
-            onClick={handleLogin} 
+            className={`register-btn ${state.isLoading ? 'loading' : ''}`}
+            onClick={handleRegister} 
             disabled={state.isLoading}
           >
-            {state.isLoading ? '登录中...' : '登录'}
+            {state.isLoading ? '注册中...' : '注册'}
           </button>
 
-          <div className="register-link">
-            <span>新用户？</span>
-            <button className="register-btn" onClick={onNavigateToRegister}>
-              免费注册
+          <div className="login-link">
+            <button className="login-btn-link" onClick={onNavigateToLogin}>
+              已有账号？立即登录
             </button>
           </div>
         </div>
@@ -178,4 +188,4 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess, onNavigateToRegis
   );
 };
 
-export default LoginForm;
+export default RegisterForm;
