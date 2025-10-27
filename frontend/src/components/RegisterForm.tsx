@@ -123,6 +123,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess, onNaviga
 
   return (
     <div className="register-form-container">
+      {/* 淘宝Logo背景 */}
+      <div className="background-logo">
+        <svg width="120" height="48" viewBox="0 0 120 48" fill="none">
+          <text x="0" y="36" fontSize="30" fontWeight="bold" fill="#ff6600" opacity="0.3">淘宝</text>
+          <text x="0" y="45" fontSize="12" fill="#ff6600" opacity="0.3">Taobao</text>
+        </svg>
+      </div>
       <div className="register-form">
         <div className="form-header">
           <h2 className="form-title">免费注册</h2>

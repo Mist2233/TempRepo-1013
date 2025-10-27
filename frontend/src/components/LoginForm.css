@@ -1,82 +1,142 @@
 .login-form-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+.background-logo {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  z-index: 1;
+}
+
 .login-form {
-  background: white;
+  background: #ffffff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 40px;
-  width: 100%;
-  max-width: 400px;
-  box-sizing: border-box;
+  width: 800px;
+  min-height: 500px;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
 }
 
 .form-header {
-  text-align: center;
-  margin-bottom: 30px;
+  background: #ffffff;
+  padding: 0;
   border-bottom: 1px solid #e8e8e8;
-  padding-bottom: 20px;
 }
 
-.form-title {
-  display: inline-block;
-  margin: 0 20px 0 0;
+.login-tabs {
+  display: flex;
+  background: #ffffff;
+}
+
+.tab-item {
+  flex: 1;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
   font-size: 16px;
   color: #666;
-  cursor: pointer;
-  padding-bottom: 10px;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+  border-radius: 4px 4px 0 0;
 }
 
-.form-subtitle {
-  display: inline-block;
-  margin: 0;
-  font-size: 16px;
-  color: #666;
-  cursor: pointer;
-  padding-bottom: 10px;
-  position: relative;
-}
-
-.form-subtitle.active {
+.tab-item:hover {
   color: #ff6600;
+}
+
+.tab-item.active {
+  background: #ff6600;
+  color: #ffffff;
+  border-bottom-color: #ff6600;
   font-weight: 500;
 }
 
-.form-subtitle.active::after {
-  content: '';
-  position: absolute;
-  bottom: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  height: 2px;
-  background-color: #ff6600;
+.form-body {
+  display: flex;
+  min-height: 400px;
+}
+
+.left-section {
+  width: 300px;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #e8e8e8;
+}
+
+.qr-section {
+  text-align: center;
+}
+
+.qr-placeholder {
+  width: 200px;
+  height: 200px;
+  background: #ffffff;
+  border: 2px dashed #d9d9d9;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.qr-text {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.qr-description {
+  font-size: 14px;
+  color: #999;
+}
+
+.right-section {
+  flex: 1;
+  padding: 40px;
+  background: #ffffff;
 }
 
 .form-content {
-  width: 100%;
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+.error-message {
+  background: #fff2f0;
+  border: 1px solid #ffccc7;
+  color: #ff4d4f;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  font-size: 14px;
 }
 
 .input-group {
   margin-bottom: 20px;
-  position: relative;
 }
 
 .form-input {
   width: 100%;
   height: 50px;
-  padding: 0 15px;
+  padding: 0 16px;
   border: 1px solid #d9d9d9;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
   box-sizing: border-box;
-  transition: border-color 0.3s;
 }
 
 .form-input:focus {
@@ -95,130 +155,108 @@
 }
 
 .verification-btn {
-  width: 100px;
+  width: 120px;
   height: 50px;
-  background-color: #ff6600;
+  background: #ff6600;
   color: white;
   border: none;
   border-radius: 4px;
   font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease;
 }
 
 .verification-btn:hover:not(.disabled) {
-  background-color: #e55a00;
+  background: #e55a00;
 }
 
 .verification-btn.disabled {
-  background-color: #ccc;
+  background: #d9d9d9;
   cursor: not-allowed;
 }
 
-.error-message {
-  color: #ff4d4f;
-  font-size: 12px;
-  margin-top: -15px;
-  margin-bottom: 15px;
-  padding-left: 15px;
-}
-
-.form-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
-  font-size: 12px;
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  color: #666;
-}
-
-.checkbox-label input[type="checkbox"] {
-  margin-right: 5px;
-}
-
-.checkbox-text {
-  user-select: none;
-}
-
 .forgot-password {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+.forgot-link {
   color: #ff6600;
   text-decoration: none;
-  font-size: 12px;
+  font-size: 14px;
 }
 
-.forgot-password:hover {
+.forgot-link:hover {
   text-decoration: underline;
 }
 
 .login-btn {
   width: 100%;
   height: 50px;
-  background-color: #ff6600;
+  background: #ff6600;
   color: white;
   border: none;
   border-radius: 4px;
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease;
   margin-bottom: 20px;
 }
 
 .login-btn:hover:not(:disabled) {
-  background-color: #e55a00;
+  background: #e55a00;
 }
 
 .login-btn:disabled {
-  background-color: #ccc;
+  background: #d9d9d9;
   cursor: not-allowed;
 }
 
 .login-btn.loading {
-  background-color: #ccc;
+  background: #d9d9d9;
+  cursor: not-allowed;
 }
 
 .register-link {
   text-align: center;
-  font-size: 12px;
-  color: #666;
 }
 
-.register-btn {
+.register-btn-link {
   background: none;
   border: none;
   color: #ff6600;
+  text-decoration: none;
+  font-size: 14px;
   cursor: pointer;
-  font-size: 12px;
-  text-decoration: underline;
-  margin-left: 5px;
 }
 
-.register-btn:hover {
-  color: #e55a00;
+.register-btn-link:hover {
+  text-decoration: underline;
 }
 
 /* 响应式设计 */
-@media (max-width: 480px) {
-  .login-form-container {
+@media (max-width: 768px) {
+  .login-form {
+    width: 90%;
+    margin: 20px;
+  }
+  
+  .form-body {
+    flex-direction: column;
+  }
+  
+  .left-section {
+    width: 100%;
+    height: 200px;
+  }
+  
+  .right-section {
     padding: 20px;
   }
   
-  .login-form {
-    padding: 30px 20px;
-  }
-  
-  .verification-group {
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .verification-btn {
-    width: 100%;
+  .background-logo {
+    top: 20px;
+    left: 20px;
   }
 }
